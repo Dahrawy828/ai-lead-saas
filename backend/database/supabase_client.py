@@ -1,13 +1,7 @@
 from supabase import create_client
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+from config.settings import settings
 
 supabase = create_client(
-    SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY
+    settings.SUPABASE_URL,
+    settings.SUPABASE_SERVICE_ROLE_KEY
 )
