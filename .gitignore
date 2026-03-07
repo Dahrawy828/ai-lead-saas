@@ -1,0 +1,17 @@
+# enviroment variables
+.env
+.env*
+.env.local
+
+# python
+__pycache__/
+*.pyc
+
+# node
+node_modules/
+
+# next
+.next/
+
+# mac
+.DS_Store
