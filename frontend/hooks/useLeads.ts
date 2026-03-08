@@ -16,7 +16,7 @@ export function useLeads() {
     }
 
     loadLeads()
-  }, [])
+  }, [setLeads])
 
   return { leads }
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import {
   ColumnDef,
   flexRender,
@@ -22,34 +23,38 @@ interface Props {
   data: Lead[]
 }
 
-export const columns: ColumnDef<Lead>[] = [
-  {
-    accessorKey: "company",
-    header: "Company",
-  },
-  {
-    accessorKey: "website",
-    header: "Website",
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-  },
-  {
-    accessorKey: "linkedin",
-    header: "LinkedIn",
-  },
-  {
-    accessorKey: "score",
-    header: "Score",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-]
-
 export default function LeadTable({ data }: Props) {
+
+  const columns = useMemo<ColumnDef<Lead>[]>(
+    () => [
+      {
+        accessorKey: "company",
+        header: "Company",
+      },
+      {
+        accessorKey: "website",
+        header: "Website",
+      },
+      {
+        accessorKey: "email",
+        header: "Email",
+      },
+      {
+        accessorKey: "linkedin",
+        header: "LinkedIn",
+      },
+      {
+        accessorKey: "score",
+        header: "Score",
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+      },
+    ],
+    []
+  )
+
   const table = useReactTable({
     data,
     columns,
@@ -59,15 +64,18 @@ export default function LeadTable({ data }: Props) {
   return (
     <div className="rounded-md border">
       <Table>
+
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </TableHead>
               ))}
             </TableRow>
@@ -75,19 +83,31 @@ export default function LeadTable({ data }: Props) {
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                  )}
-                </TableCell>
-              ))}
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="h-24 text-center"
+              >
+                No leads found.
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
+
       </Table>
     </div>
   )
