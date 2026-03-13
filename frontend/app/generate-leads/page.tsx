@@ -1,8 +1,10 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import axiosClient from "@/lib/axiosClient"
+import { useRouter } from "next/navigation"
 import AuthGuard from "@/components/auth/AuthGuard"
+import { api } from "@/services/api"
+import { useLeadStore } from "@/store/leadStore"
 
 type FormData = {
   industry: string
@@ -16,11 +18,25 @@ type FormData = {
 export default function GenerateLeadsPage() {
 
   const { register, handleSubmit } = useForm<FormData>()
+  const router = useRouter()
+
+  const setLeads = useLeadStore((state) => state.setLeads)
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await axiosClient.post("/generate-leads", data)
-      console.log("Generated Leads:", res.data.leads)
+
+      const response = await api.generateLeads(data)
+
+      if (response.success) {
+
+        // Save leads in Zustand
+        setLeads(response.leads)
+
+        // Redirect to leads page
+        router.push("/leads")
+
+      }
+
     } catch (error) {
       console.error("Error generating leads:", error)
     }

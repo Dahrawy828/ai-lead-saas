@@ -1,14 +1,14 @@
-async def run_lead_generation_pipeline(data: dict):
+from agents.lead_finder_agent import lead_finder_agent
 
-    leads = [
-        {
-            "company": "Bright Dental Clinic",
-            "website": "https://brightdental.com",
-            "email": "contact@brightdental.com",
-            "linkedin": "https://linkedin.com/company/brightdental",
-            "score": 82,
-            "status": "new"
-        }
-    ]
 
-    return leads
+async def run_lead_generation_pipeline(search_params: dict):
+
+    context = {
+        "search_params": search_params,
+        "leads": [],
+        "logs": []
+    }
+
+    context["leads"] = await lead_finder_agent.find_leads(search_params)
+
+    return context

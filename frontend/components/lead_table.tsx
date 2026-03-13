@@ -31,25 +31,80 @@ export default function LeadTable({ data }: Props) {
         accessorKey: "company",
         header: "Company",
       },
+
       {
         accessorKey: "website",
         header: "Website",
+        cell: ({ row }) => (
+          <a
+            href={row.original.website}
+            target="_blank"
+            className="text-blue-600 hover:underline"
+          >
+            {row.original.website.replace("https://", "")}
+          </a>
+        ),
       },
+
       {
         accessorKey: "email",
         header: "Email",
       },
+
       {
         accessorKey: "linkedin",
         header: "LinkedIn",
+        cell: ({ row }) => (
+          <a
+            href={row.original.linkedin}
+            target="_blank"
+            className="text-blue-600 hover:underline"
+          >
+            View
+          </a>
+        ),
       },
+
       {
         accessorKey: "score",
         header: "Score",
+        cell: ({ row }) => {
+
+          const score = row.original.score
+
+          let color = "bg-gray-200"
+
+          if (score >= 80) color = "bg-green-500 text-white"
+          else if (score >= 50) color = "bg-yellow-400"
+          else color = "bg-red-400 text-white"
+
+          return (
+            <span className={`px-2 py-1 rounded text-sm ${color}`}>
+              {score}
+            </span>
+          )
+        },
       },
+
       {
         accessorKey: "status",
         header: "Status",
+        cell: ({ row }) => {
+
+          const status = row.original.status
+
+          let color = "bg-gray-200"
+
+          if (status === "new") color = "bg-blue-500 text-white"
+          if (status === "discovered") color = "bg-purple-500 text-white"
+          if (status === "contacted") color = "bg-green-500 text-white"
+
+          return (
+            <span className={`px-2 py-1 rounded text-xs ${color}`}>
+              {status}
+            </span>
+          )
+        },
       },
     ],
     []
@@ -67,7 +122,7 @@ export default function LeadTable({ data }: Props) {
 
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id} className="hover:bg-muted">
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
                   {header.isPlaceholder
