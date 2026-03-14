@@ -1,4 +1,4 @@
-from backend.agents.contact_finder_agent import contact_finder_agent
+from agents.contact_finder_agent import contact_finder_agent
 
 
 context = {
