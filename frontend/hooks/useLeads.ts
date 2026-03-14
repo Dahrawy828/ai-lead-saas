@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import { api } from "@/services/api"
 import { useLeadStore } from "@/store/leadStore"
 
@@ -7,9 +7,11 @@ export function useLeads() {
   const leads = useLeadStore((state) => state.leads)
   const setLeads = useLeadStore((state) => state.setLeads)
 
+  const search = useLeadStore((state) => state.search)
+  const statusFilter = useLeadStore((state) => state.statusFilter)
+
   useEffect(() => {
 
-    // If leads already exist (generated from form), don't fetch again
     if (leads.length > 0) return
 
     async function loadLeads() {
@@ -25,5 +27,23 @@ export function useLeads() {
 
   }, [leads, setLeads])
 
-  return { leads }
+  const filteredLeads = useMemo(() => {
+
+    return leads.filter((lead) => {
+
+      const matchesSearch =
+        lead.company_name.toLowerCase().includes(search.toLowerCase()) ||
+        lead.website.toLowerCase().includes(search.toLowerCase()) ||
+        lead.email.toLowerCase().includes(search.toLowerCase())
+
+      const matchesStatus =
+        statusFilter === "all" || lead.status === statusFilter
+
+      return matchesSearch && matchesStatus
+
+    })
+
+  }, [leads, search, statusFilter])
+
+  return { leads: filteredLeads }
 }
