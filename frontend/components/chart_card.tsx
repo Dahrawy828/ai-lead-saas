@@ -14,7 +14,7 @@ export default function ChartCard({ title, children }: ChartCardProps) {
         <CardTitle>{title}</CardTitle>
       </CardHeader>
 
-      <CardContent className="h-[300px]">
+      <CardContent className="h-75">
         {children}
       </CardContent>
     </Card>
