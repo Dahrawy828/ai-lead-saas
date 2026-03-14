@@ -1,4 +1,5 @@
-from fastapi import Header, HTTPException
+from fastapi import HTTPException, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from supabase import create_client
 from config.settings import settings
 
@@ -9,24 +10,17 @@ supabase = create_client(
     settings.SUPABASE_SERVICE_ROLE_KEY
 )
 
+# Swagger / FastAPI security scheme
+security = HTTPBearer()
 
-async def get_current_user(authorization: str = Header(None)):
 
-    if not authorization:
-        raise HTTPException(
-            status_code=401,
-            detail="Missing Authorization header"
-        )
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security)
+):
+
+    token = credentials.credentials
 
     try:
-        scheme, token = authorization.split()
-
-        if scheme.lower() != "bearer":
-            raise HTTPException(
-                status_code=401,
-                detail="Invalid authentication scheme"
-            )
-
         # validate token with Supabase
         response = supabase.auth.get_user(token)
 
@@ -37,12 +31,6 @@ async def get_current_user(authorization: str = Header(None)):
             )
 
         return response.user.id
-
-    except ValueError:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid authorization header format"
-        )
 
     except Exception:
         raise HTTPException(

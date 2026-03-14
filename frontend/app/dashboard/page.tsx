@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import AuthGuard from "@/components/auth/AuthGuard"
 import ChartCard from "@/components/chart_card"
-import { api } from "@/services/api"
+import axiosClient from "@/lib/axiosClient"
 
 import {
   ResponsiveContainer,
@@ -60,11 +60,15 @@ export default function DashboardPage() {
 
       try {
 
-        const data = await api.getAnalytics()
+        const [leadsRes, scoreRes, industriesRes] = await Promise.all([
+          axiosClient.get("/analytics/leads-per-day"),
+          axiosClient.get("/analytics/score-distribution"),
+          axiosClient.get("/analytics/top-industries")
+        ])
 
-        setLeadsPerDay(data.leads_per_day || [])
-        setScoreDistribution(data.score_distribution || [])
-        setIndustries(data.industries || [])
+        setLeadsPerDay(leadsRes.data.data || [])
+        setScoreDistribution(scoreRes.data.data || [])
+        setIndustries(industriesRes.data.data || [])
 
       } catch (error) {
 
