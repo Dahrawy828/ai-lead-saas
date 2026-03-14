@@ -1,0 +1,68 @@
+{
+  "name": "n8n_workflows",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "01ee131e-a435-4e48-80f0-c127f0b9c7bd",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/generate-leads",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"industry\": \"Diamond\",\n  \"country\": \"Egypt\",\n  \"city\": \"Cairo\",\n  \"company_size\": \"1-10\",\n  \"keywords\": \"diamond market\",\n  \"limit\": 5\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "665bb105-de8f-4fdc-890d-7e0f1ec3f5bf",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ea56eee6-e1c2-4cf2-a7f4-19c7bc052093",
+  "meta": {
+    "instanceId": "e8f055949d93a2088dab0c62e462fa83fc9c998b059389ef0726b94db5f03b9e"
+  },
+  "id": "94DT9Sbvoqxr5xLf",
+  "tags": []
+}
