@@ -23,14 +23,29 @@ import {
   Cell
 } from "recharts"
 
+type LeadsPerDay = {
+  date: string
+  leads: number
+}
+
+type ScoreDistribution = {
+  score: string
+  count: number
+}
+
+type IndustryData = {
+  name: string
+  value: number
+}
+
 export default function DashboardPage() {
 
   const { user, signOut } = useAuth()
   const router = useRouter()
 
-  const [leadsPerDay, setLeadsPerDay] = useState<any[]>([])
-  const [scoreDistribution, setScoreDistribution] = useState<any[]>([])
-  const [industries, setIndustries] = useState<any[]>([])
+  const [leadsPerDay, setLeadsPerDay] = useState<LeadsPerDay[]>([])
+  const [scoreDistribution, setScoreDistribution] = useState<ScoreDistribution[]>([])
+  const [industries, setIndustries] = useState<IndustryData[]>([])
 
   const COLORS = ["#2563eb", "#16a34a", "#f59e0b", "#ef4444"]
 
