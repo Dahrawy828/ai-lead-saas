@@ -12,7 +12,7 @@ type FormData = {
   city?: string
   company_size?: string
   keywords?: string
-  limit: number
+  requested_limit: number
 }
 
 export default function GenerateLeadsPage() {
@@ -86,7 +86,7 @@ export default function GenerateLeadsPage() {
           <input
             type="number"
             defaultValue={10}
-            {...register("limit")}
+            {...register("requested_limit")}
             className="border p-2 w-full rounded"
           />
 

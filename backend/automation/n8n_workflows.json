@@ -26,13 +26,13 @@
         "url": "http://127.0.0.1:8000/generate-leads",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"industry\": \"Diamond\",\n  \"country\": \"Egypt\",\n  \"city\": \"Cairo\",\n  \"company_size\": \"1-10\",\n  \"keywords\": \"diamond market\",\n  \"limit\": 5\n}",
+        "jsonBody": "{\n  \"industry\": \"Diamond\",\n  \"country\": \"Egypt\",\n  \"city\": \"Cairo\",\n  \"company_size\": \"1-10\",\n  \"keywords\": \"diamond market\",\n  \"requested_limit\": 5\n}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        208,
+        224,
         0
       ],
       "id": "665bb105-de8f-4fdc-890d-7e0f1ec3f5bf",
@@ -59,7 +59,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "ea56eee6-e1c2-4cf2-a7f4-19c7bc052093",
+  "versionId": "6167b234-aa6c-40f3-b252-543de8c0db7c",
   "meta": {
     "instanceId": "e8f055949d93a2088dab0c62e462fa83fc9c998b059389ef0726b94db5f03b9e"
   },

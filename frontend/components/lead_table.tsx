@@ -28,7 +28,7 @@ export default function LeadTable({ data }: Props) {
   const columns = useMemo<ColumnDef<Lead>[]>(
     () => [
       {
-        accessorKey: "company",
+        accessorKey: "company_name",
         header: "Company",
       },
 

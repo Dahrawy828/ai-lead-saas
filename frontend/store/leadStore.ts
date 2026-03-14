@@ -1,7 +1,7 @@
 import { create } from "zustand"
 
 export interface Lead {
-  company: string
+  company_name: string
   website: string
   email: string
   linkedin: string

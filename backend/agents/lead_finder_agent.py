@@ -11,7 +11,7 @@ class LeadFinderAgent:
 
         industry = search_params.get("industry", "business")
         city = search_params.get("city", "New York")
-        limit = search_params.get("limit", 5)
+        limit = search_params.get("requested_limit", 5)
 
         leads = []
 

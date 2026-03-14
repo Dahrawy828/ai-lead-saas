@@ -1,15 +1,48 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from api.schemas import GenerateLeadsRequest
 from services.lead_service import generate_leads
 from database.supabase_client import supabase
+from api.dependencies import get_current_user
 
 router = APIRouter()
 
 
-@router.post("/generate-leads")
-async def generate_leads_endpoint(payload: GenerateLeadsRequest):
+# -------------------------------------------------------
+# Generate Leads (secured)
+# -------------------------------------------------------
 
-    leads = await generate_leads(payload.dict())
+@router.post("/generate-leads")
+async def generate_leads_endpoint(
+    payload: GenerateLeadsRequest,
+    user_id: str = Depends(get_current_user)
+):
+
+    leads = await generate_leads(payload.model_dump(), user_id)
+    
+    return {
+        "success": True,
+        "leads": leads
+    }
+
+
+# -------------------------------------------------------
+# Get Leads (secured)
+# -------------------------------------------------------
+
+@router.get("/leads")
+async def get_leads(user_id: str = Depends(get_current_user)):
+
+    response = supabase.table("lead_searches") \
+        .select("id, leads(*)") \
+        .eq("user_id", user_id) \
+        .execute()
+
+    searches = response.data or []
+
+    leads = []
+
+    for search in searches:
+        leads.extend(search.get("leads", []))
 
     return {
         "success": True,
@@ -17,35 +50,25 @@ async def generate_leads_endpoint(payload: GenerateLeadsRequest):
     }
 
 
-@router.get("/leads")
-async def get_leads():
-
-    # Temporary mock data
-    return {
-        "success": True,
-        "leads": [
-            {
-                "company": "Bright Dental Clinic",
-                "website": "https://brightdental.com",
-                "email": "contact@brightdental.com",
-                "linkedin": "https://linkedin.com/company/brightdental",
-                "score": 82,
-                "status": "new"
-            }
-        ]
-    }
-
 
 # -------------------------------------------------------
-# Analytics Endpoint (Dashboard Charts)
+# Analytics Endpoint (secured)
 # -------------------------------------------------------
 
 @router.get("/analytics")
-async def get_analytics():
+async def get_analytics(user_id: str = Depends(get_current_user)):
 
-    response = supabase.table("leads").select("*").execute()
+    response = supabase.table("lead_searches") \
+        .select("id, leads(*)") \
+        .eq("user_id", user_id) \
+        .execute()
+    
+    searches = response.data or []
 
-    leads = response.data or []
+    leads = []
+
+    for search in searches:
+        leads.extend(search.get("leads", []))
 
     leads_per_day = {}
     score_distribution = {
@@ -59,13 +82,11 @@ async def get_analytics():
 
     for lead in leads:
 
-        # Leads per day
         created_at = lead.get("created_at", "")
         day = created_at[:10]
 
         leads_per_day[day] = leads_per_day.get(day, 0) + 1
 
-        # Score distribution
         score = lead.get("score", 0)
 
         if score < 20:
@@ -79,13 +100,13 @@ async def get_analytics():
         else:
             score_distribution["80-100"] += 1
 
-        # Industries
         industry = lead.get("industry", "Other")
 
         industries[industry] = industries.get(industry, 0) + 1
 
     return {
         "success": True,
+        "user_id": user_id,
         "leads_per_day": [
             {"date": k, "leads": v} for k, v in leads_per_day.items()
         ],

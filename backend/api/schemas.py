@@ -7,4 +7,4 @@ class GenerateLeadsRequest(BaseModel):
     city: str | None = None
     company_size: str | None = None
     keywords: str | None = None
-    limit: int = 20
+    requested_limit: int = 20
