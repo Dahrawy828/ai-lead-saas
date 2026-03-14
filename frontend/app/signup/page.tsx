@@ -1,6 +1,23 @@
+"use client"
+
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/useAuth"
+
 import SignupForm from "@/components/auth/SignupForm"
 
 export default function SignupPage() {
+
+  const router = useRouter()
+  const { user } = useAuth()
+
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard")
+    }
+  }, [user, router])
+
+  if (user) return null
 
   return (
 
