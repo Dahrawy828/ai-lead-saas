@@ -19,6 +19,11 @@ export const api = {
   getLeads: async () => {
     const response = await axiosClient.get("/leads")
     return response.data
+  },
+
+  getAnalytics: async () => {
+    const response = await axiosClient.get("/analytics")
+    return response.data
   }
 
 }
